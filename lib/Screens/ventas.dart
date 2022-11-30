@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'nuevaVenta.dart';
 
 class VentasPage extends StatelessWidget {
-  static String id = 'Ventas_Page';
+  static String id = 'Ventas_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class VentasPage extends StatelessWidget {
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Ventas',
@@ -64,7 +64,7 @@ class VentasPage extends StatelessWidget {
                         width: sizeScreen.width * .2,
                       ),
                       Text(
-                        '${costos.length}',
+                        '${costos.length}', // Se imprime la cantidad de ventas generadas
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -72,7 +72,9 @@ class VentasPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                SizedBox(height: sizeScreen.height*.01,),
+                  SizedBox(
+                    height: sizeScreen.height * .01,
+                  ),
                   Row(
                     children: [
                       Padding(
@@ -89,6 +91,10 @@ class VentasPage extends StatelessWidget {
                         width: sizeScreen.width * .2,
                       ),
                       Text(
+                        /**
+                         * Se llama a la funcion
+                         * para imprimir el total de dinero generado
+                         */
                         '${totalVentas()} \$',
                         style: TextStyle(
                             color: Colors.white,
@@ -125,10 +131,10 @@ class VentasPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: sizeScreen.height*.05,
-                  width: sizeScreen.width*.1,
-                  )
-,                Container(
+                  height: sizeScreen.height * .05,
+                  width: sizeScreen.width * .1,
+                ),
+                Container(
                   width: sizeScreen.width * .25,
                   height: sizeScreen.height * .05,
                   child: Card(
@@ -149,25 +155,27 @@ class VentasPage extends StatelessWidget {
                 )
               ],
             ),
+            /**
+             * List view para mostrar las ventas generadas
+             */
             Expanded(
               child: ListView.builder(
                 itemCount: costos.length,
                 itemBuilder: (context, int index) {
                   return Container(
                     margin: EdgeInsetsDirectional.only(
-                      start: sizeScreen.width*.12,
-                      end: sizeScreen.width*.12
-                    ),
+                        start: sizeScreen.width * .12,
+                        end: sizeScreen.width * .12),
                     child: Card(
                       color: Color(0xff363636),
                       elevation: 0,
                       child: ListTile(
                         title: Text(
-                          servicio.values.elementAt(index),
+                          servicio.values.elementAt(index), // Se imprime la venta que se hizo
                           style: TextStyle(color: Colors.white),
                         ),
                         trailing: Text(
-                          '${costos.values.elementAt(index)} \$',
+                          '${costos.values.elementAt(index)} \$', // Se imprime el costo de la venta
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

@@ -2,22 +2,25 @@
 
 import 'package:angy/Api/bd_agenda.dart';
 import 'package:angy/Api/bd_servicios.dart';
-import 'package:angy/Api/bd_ventas.dart';
 import 'package:angy/Screens/servicios.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:date_field/date_field.dart';
 
 class BorrarServicioPage extends StatefulWidget {
-  static String id = 'BorrarServicio_Page';
-  
+  static String id =
+      'BorrarServicio_Page'; //Variable que obtendra la ruta de la pantalla
+
   @override
   State<StatefulWidget> createState() => BorrarServicioPageState();
 }
-class BorrarServicioPageState extends State<BorrarServicioPage>{
 
+class BorrarServicioPageState extends State<BorrarServicioPage> {
   @override
   Widget build(BuildContext context) {
+    /**
+     *  Variable que contendra el tamaño de la pantalla del dispositivo
+     * Ayudará para que la app sea responsiva
+     */
     final sizeScreen = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -31,11 +34,12 @@ class BorrarServicioPageState extends State<BorrarServicioPage>{
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, ServiciosPage.id, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, ServiciosPage.id,
+                  (route) => false); // Regreso a la pantalla de los servicios
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Borrar servicio',
@@ -52,12 +56,16 @@ class BorrarServicioPageState extends State<BorrarServicioPage>{
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /**
+             * clase propia para mandar a llamar al DropDown
+             */
             _DropDown(
-              text: '   Servicio',
-              items: servicios.keys,
+              text: '   Servicio', //Texto impreso en el DrowDown
+              items: servicios.keys, // Servicios que se verán en el DropDown
             ),
             SizedBox(height: sizeScreen.height * .03),
-            _buttonSingUp(context, sizeScreen)
+            _buttonBorrarServicio(
+                context, sizeScreen) //Boton para borrar el servicio
           ],
         ),
       ),
@@ -66,11 +74,9 @@ class BorrarServicioPageState extends State<BorrarServicioPage>{
 }
 
 /*
- * Seccion de metodos y funciones
+ * Seccion de metodos, funciones y widgets propios
 */
-
-Widget _buttonSingUp(BuildContext context, Size size) {
-
+Widget _buttonBorrarServicio(BuildContext context, Size size) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
       primary: Colors.red,
@@ -78,6 +84,7 @@ Widget _buttonSingUp(BuildContext context, Size size) {
         horizontal: size.width * .1,
         vertical: size.height * .029,
       ),
+      //Redondear esquinas
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
@@ -91,38 +98,45 @@ Widget _buttonSingUp(BuildContext context, Size size) {
           fontFamily: 'Lato'),
     ),
     onPressed: () {
-          AwesomeDialog(
-          dialogType: DialogType.noHeader,
-          context: context,
-          // ignore: deprecated_member_use
-          animType: AnimType.SCALE,
-          title: 'sin registro',
-          body: const Center(
-            child: Text(
-              '¿Estas seguro que quieres borrar este servicio?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Lato'),
-            ),
+      /**
+       * Awesome Dialog para preguntar si se quiere borrar el servicio seleccionado
+       */
+      AwesomeDialog(
+        dialogType: DialogType.noHeader,
+        context: context,
+        // ignore: deprecated_member_use
+        animType: AnimType.SCALE,
+        title: 'Borrar servicio',
+        body: const Center(
+          child: Text(
+            '¿Estas seguro que quieres borrar este servicio?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Lato'),
           ),
-          btnOkColor: Colors.grey.shade600,
-          btnOkText: 'Borrar',
-          btnOkOnPress: () {
-            servicios.remove(TipoServicio);
-            print(servicios);
-            Navigator.pushNamed(context, BorrarServicioPage.id);
-          },
-        ).show();
+        ),
+        btnOkColor: Colors.grey.shade600,
+        btnOkText: 'Borrar',
+        btnOkOnPress: () {
+          /**
+           * Al hacer click en el boton del Awesome Dialog hace lo siguiente:
+           * 1.- Borra el servicio seleccionado
+           * 2.- Regresa a la pantalla para borrar servicios
+           */
+          servicios.remove(TipoServicio);
+          Navigator.pushNamed(context, BorrarServicioPage.id);
+        },
+      ).show();
     },
   );
 }
 
 class _DropDown extends StatefulWidget {
-  String text;
+  String text; // Texto del DropDown
+  //Variable iterable de strings que obtendra los servicios de la BD
   Iterable<String> items = [''];
 
+// Constructor de la clase del Drop down
   _DropDown({required this.text, required this.items});
 
   @override
@@ -130,6 +144,9 @@ class _DropDown extends StatefulWidget {
 }
 
 class _DropDownState extends State<_DropDown> {
+  /**
+   * Variable que obtendra el valor seleccionado en el Drop Down
+   */
   String? _value;
 
   @override
@@ -152,15 +169,22 @@ class _DropDownState extends State<_DropDown> {
                 widget.text,
                 style: TextStyle(color: Colors.grey.shade600),
               ),
-              value: _value,
+              value: _value, // Valor inicial del Drop Down
               style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-              items: widget.items.map((String posiciones) {
+              items: widget.items.map((String servicioss) {
                 return DropdownMenuItem(
-                  value: posiciones,
-                  child: Text(posiciones),
+                  value: servicioss,
+                  child: Text(servicioss),
                 );
-              }).toList(),
-              onChanged: (String? newValue) => setState(() {
+              }).toList(), // Se listan los servicios que se le mandan al Drop Down
+              onChanged: 
+              /**
+               * Al cambiar el valor en el Drop Down sucede lo siguiente:
+               * 1.- Se obtiene el servicio seleccionado.
+               * 2.- Se le pasa a la variable local para mostrarlo despues.
+               * 3.- Se manda el servicio seleccionado a la variable global de la BD para su posterior uso
+               */
+              (String? newValue) => setState(() {
                     _value = newValue!;
                     TipoServicio = _value!;
                   })),

@@ -13,6 +13,11 @@ import 'package:angy/Screens/principal.dart';
 import 'package:angy/Screens/servicios.dart';
 import 'package:flutter/widgets.dart';
 
+/**
+ *  Variable tipo Map que contiene las rutas de las pantallas
+ * para su manejo durante la app
+ * */ 
+
 var customRoutes = <String, WidgetBuilder>{
   LogInPage.id: (_) => LogInPage(),
   LogUpPage.id: (_) => LogUpPage(),

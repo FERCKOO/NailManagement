@@ -6,13 +6,13 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
 class NuevoMaterialPage extends StatelessWidget {
-  static String id = 'NuevoMaterial_Page';
+  static String id = 'NuevoMaterial_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
 
-    final name = TextEditingController();
+    final name = TextEditingController(); // Variable para obtener el nombre del material
 
     return SafeArea(
       child: Scaffold(
@@ -29,7 +29,7 @@ class NuevoMaterialPage extends StatelessWidget {
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Nuevo material',
@@ -46,9 +46,12 @@ class NuevoMaterialPage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /**
+             * Seccion del formulario
+             */
             _textFieldName(sizeScreen, name),
             SizedBox(height: sizeScreen.height * .03),
-            _buttonSingUp(context, sizeScreen, name)
+            _buttonGuardarMaterial(context, sizeScreen, name)
           ],
         ),
       ),
@@ -70,8 +73,8 @@ Widget _textFieldName(Size size, name) {
   );
 }
 
-Widget _buttonSingUp(BuildContext context, Size size, name) {
-  String _NameVar = '';
+Widget _buttonGuardarMaterial(BuildContext context, Size size, name) {
+  String _NameVar = ''; // Variable local auxliar
   Color coloor = Colors.grey.shade700;
 
   return ElevatedButton(
@@ -101,10 +104,16 @@ Widget _buttonSingUp(BuildContext context, Size size, name) {
       void dispose() {
         name.dispose();
       }
-
+      // Se verifica que no esté vacio el campo
       if (_NameVar != '') {
-          listAComprar.add(_NameVar);
-          Navigator.pushNamedAndRemoveUntil(context, ListaDeComprasPage.id, (route) => false);
+        /**
+         * Al no estar vacio hace lo siguiente:
+         * 1.- Agrega el material a la bd.
+         * 2.- redirecciona a la pantalla de la lista.
+         */
+        listAComprar.add(_NameVar);
+        Navigator.pushNamedAndRemoveUntil(
+            context, ListaDeComprasPage.id, (route) => false);
       } else {
         AwesomeDialog(
           dialogType: DialogType.noHeader,

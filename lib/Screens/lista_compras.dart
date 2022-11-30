@@ -6,10 +6,14 @@ import 'package:angy/Screens/principal.dart';
 import 'package:flutter/material.dart';
 
 class ListaDeComprasPage extends StatelessWidget {
-  static String id = 'Lista de compras_Page';
+  static String id = 'Lista de compras_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
+    /**
+     *  Variable que contendra el tamaño de la pantalla del dispositivo
+     * Ayudará para que la app sea responsiva
+     */
     final sizeScreen = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -24,11 +28,11 @@ class ListaDeComprasPage extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, PrincipalPage.id, (route) => false);
+                  context, PrincipalPage.id, (route) => false); // Regreso a la pantalla principal
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Lista de compras',
@@ -49,7 +53,15 @@ class ListaDeComprasPage extends StatelessWidget {
               height: sizeScreen.height * .1,
             ),
             Expanded(
-              child: (listAComprar.isEmpty)
+              child: 
+              /**
+               * Condicional ternario.
+               * Si la lista de meterial a comprar esta vacio...
+               * Muestra que no hay algo para comprar
+               * Si esta lleno...
+               * Mostrará el listado de los materiales a comprar
+               */
+              (listAComprar.isEmpty)
                   ? Text(
                       'No hay nada para comprar',
                       style: TextStyle(
@@ -70,16 +82,22 @@ class ListaDeComprasPage extends StatelessWidget {
                             color: Color(0xff363636),
                             elevation: 0,
                             child: ListTile(
-                              title: Text(listAComprar.elementAt(index),
-                              style: TextStyle(
-                                color: Colors.white
-                              ),),
+                              title: Text(
+                                listAComprar.elementAt(index),
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         );
                       },
                     ),
             ),
+
+            /**
+             * Row para mostrar botones
+             * Limpiar lista
+             * Agregar un nuevo material a la lista
+             */
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -102,6 +120,11 @@ class ListaDeComprasPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato'),
                   ),
+                  /**
+                   * Al presionar el boton de "Limpiar lista" hace lo siguiente:
+                   * 1.- Limpiar la BD 
+                   * 2.- llama a la pantalla de la lista de compras
+                   */
                   onPressed: () {
                     listAComprar.removeWhere((element) => true);
                     Navigator.pushNamedAndRemoveUntil(
@@ -127,11 +150,14 @@ class ListaDeComprasPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato'),
                   ),
+                  /**
+                   * Al presionar el boton de "Nuevo material"...
+                   * lo redireccionará a la pantalla para agregar un nuevo material a la lista
+                  */ 
                   onPressed: () {
                     Navigator.pushNamed(context, NuevoMaterialPage.id);
                   },
                 ),
-                
               ],
             ),
             SizedBox(

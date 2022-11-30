@@ -3,19 +3,20 @@
 import 'package:angy/Api/bd_agenda.dart';
 import 'package:angy/Api/bd_servicios.dart';
 import 'package:angy/Api/bd_ventas.dart';
+import 'package:angy/Screens/ventas.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
 
 class NuevaVentaPage extends StatelessWidget {
-  static String id = 'NuevaVenta_Page';
+  static String id = 'NuevaVenta_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
 
-    final firstName = TextEditingController();
-    final costo = TextEditingController();
+    final firstName = TextEditingController(); // Variable para obtener el nombre
+    final costo = TextEditingController(); // Variable para obtener el costo del servicio
 
     return SafeArea(
       child: Scaffold(
@@ -49,6 +50,9 @@ class NuevaVentaPage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /**
+             * Formulario para la venta nueva
+             */
             _textFieldName(sizeScreen, firstName),
             SizedBox(height: sizeScreen.height * .02),
             _DropDown(
@@ -69,7 +73,7 @@ class NuevaVentaPage extends StatelessWidget {
 }
 
 /*
- * Seccion de metodos y funciones
+ * Seccion de metodos, funciones y widgets propios
 */
 Widget _formFieldDate() {
   return _formDateGeneral();
@@ -96,7 +100,8 @@ Widget _textFieldCost(Size size, costo) {
 }
 
 Widget _buttonSingUp(BuildContext context, Size size, fName, costo) {
-  String _fNameVar = '';
+  // Variables locales auxiliares
+  String _fNameVar = ''; 
   String _costoVar = '';
   Color coloor = Colors.grey.shade700;
 
@@ -120,8 +125,8 @@ Widget _buttonSingUp(BuildContext context, Size size, fName, costo) {
           fontFamily: 'Lato'),
     ),
     onPressed: () {
-      _fNameVar = fName.text;
-      _costoVar = costo.text;
+      _fNameVar = fName.text; // Se obtiene el nombre del text label
+      _costoVar = costo.text; // Se obtiene el costo del text label
 
       // Limpieza de los controladores
       @override
@@ -130,38 +135,49 @@ Widget _buttonSingUp(BuildContext context, Size size, fName, costo) {
         costo.dispose();
       }
 
+      // Se verifica que n esten vacios los text labels
       if (_fNameVar != '' &&
           TipoServicio != '' &&
           fechaCita != '' &&
           horaCita != '' &&
           _costoVar != '') {
+            /**
+             * Si los datos existen en la base de datos...
+             * Esto quiere decir si se tiene la cita agendada
+             * Se puede generar el reporte de la venta del servicio
+             */
         if (cliente.values.contains(_fNameVar) &&
             servicio.containsValue(TipoServicio) &&
             fechaHoraCita.containsValue('$fechaCita $horaCita') &&
             costos.length == cliente.length) {
+              /**
+               * Si todo sale bien se procede a hacer lo siguiente:
+               * 1.- Se agrega el costo del servicio a la bd.
+               * 2.- Se redirecciona a la pagina de las ventas.
+               */
           costos.addAll({costos.keys.last + 1: int.parse(_costoVar)});
-          Navigator.of(context).pop();
+          Navigator.pushNamedAndRemoveUntil(context, VentasPage.id, (route) => false);
         } else {
           AwesomeDialog(
-          dialogType: DialogType.noHeader,
-          context: context,
-          // ignore: deprecated_member_use
-          animType: AnimType.SCALE,
-          title: 'sin registro',
-          body: const Center(
-            child: Text(
-              'No tiene agendada esta cita.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Lato'),
+            dialogType: DialogType.noHeader,
+            context: context,
+            // ignore: deprecated_member_use
+            animType: AnimType.SCALE,
+            title: 'sin registro',
+            body: const Center(
+              child: Text(
+                'No tiene agendada esta cita.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Lato'),
+              ),
             ),
-          ),
-          btnOkColor: coloor,
-          btnOkText: 'Ok',
-          btnOkOnPress: () {},
-        ).show();
+            btnOkColor: coloor,
+            btnOkText: 'Ok',
+            btnOkOnPress: () {},
+          ).show();
         }
       } else {
         AwesomeDialog(
@@ -190,16 +206,21 @@ Widget _buttonSingUp(BuildContext context, Size size, fName, costo) {
 }
 
 class _DropDown extends StatefulWidget {
-  String text;
+  String text; // Texto del DropDown
+  //Variable iterable de strings que obtendra los servicios de la BD
   Iterable<String> items = [''];
-
+// Constructor de la clase del Drop down
   _DropDown({required this.text, required this.items});
 
   @override
   State<StatefulWidget> createState() => _DropDownState();
 }
 
+
 class _DropDownState extends State<_DropDown> {
+  /**
+   * Variable que obtendra el valor seleccionado en el Drop Down
+   */
   String? _value;
 
   @override
@@ -222,15 +243,22 @@ class _DropDownState extends State<_DropDown> {
                 widget.text,
                 style: TextStyle(color: Colors.grey.shade600),
               ),
-              value: _value,
+              value: _value, // Valor inicial del Drop Down
               style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-              items: widget.items.map((String posiciones) {
+              items: widget.items.map((String servicioss) {
                 return DropdownMenuItem(
-                  value: posiciones,
-                  child: Text(posiciones),
+                  value: servicioss,
+                  child: Text(servicioss),
                 );
-              }).toList(),
-              onChanged: (String? newValue) => setState(() {
+              }).toList(), // Se listan los servicios que se le mandan al Drop Down
+              onChanged: 
+              /**
+               * Al cambiar el valor en el Drop Down sucede lo siguiente:
+               * 1.- Se obtiene el servicio seleccionado.
+               * 2.- Se le pasa a la variable local para mostrarlo despues.
+               * 3.- Se manda el servicio seleccionado a la variable global de la BD para su posterior uso
+               */
+              (String? newValue) => setState(() {
                     _value = newValue!;
                     TipoServicio = _value!;
                   })),
@@ -239,6 +267,7 @@ class _DropDownState extends State<_DropDown> {
     );
   }
 }
+
 
 /**
  * Clase generica de text labels

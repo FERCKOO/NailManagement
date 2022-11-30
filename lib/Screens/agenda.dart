@@ -3,12 +3,17 @@
 import 'package:angy/Api/bd_agenda.dart';
 import 'package:angy/Screens/nuevaCita.dart';
 import 'package:flutter/material.dart';
+import 'principal.dart';
 
 class AgendaPage extends StatelessWidget {
-  static String id = 'Agenda_Page';
+  static String id = 'Agenda_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
+    /**
+     *  Variable que contendra el tamaño de la pantalla del dispositivo
+     * Ayudará para que la app sea responsiva
+     */
     final sizeScreen = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -22,11 +27,11 @@ class AgendaPage extends StatelessWidget {
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(context, PrincipalPage.id, (route) => false); // Regreso a la pantalla principal
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Agenda',
@@ -43,6 +48,10 @@ class AgendaPage extends StatelessWidget {
         body: Column(
           children: [
             SizedBox(height: sizeScreen.height * .03),
+            /**
+             * Widget propio para crear una nueva cita
+             * Se le manda el contexto para obtener el tamaño de pantalla
+             */
             _buttonNuevaCita(context),
             SizedBox(height: sizeScreen.height * .02),
             Expanded(
@@ -50,14 +59,12 @@ class AgendaPage extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: sizeScreen.width * .1),
                 child: Column(
                   children: [
-                    /**
-               * Linea horizontal.
-              */
+                    //Linea horizontal
                     Container(
                       decoration: const BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: Color(0xFFE51E3F),
+                            color: Colors.white,
                             width: 2,
                           ),
                         ),
@@ -65,7 +72,7 @@ class AgendaPage extends StatelessWidget {
                     ),
                     SizedBox(height: sizeScreen.height * .002),
 
-                    //Zona de citas
+                    //Zona de las citas
                     Expanded(
                       child: ListView.builder(
                         itemCount: servicio.length,
@@ -105,6 +112,7 @@ class AgendaPage extends StatelessWidget {
   }
 }
 
+//Widget propio del boton "Nueva cita"
 Widget _buttonNuevaCita(BuildContext context) {
   final sizeScreen = MediaQuery.of(context).size;
 
@@ -115,6 +123,7 @@ Widget _buttonNuevaCita(BuildContext context) {
         horizontal: sizeScreen.width * .08,
         vertical: sizeScreen.height * .025,
       ),
+      //Redondear esquinas
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
@@ -128,7 +137,7 @@ Widget _buttonNuevaCita(BuildContext context) {
           fontFamily: 'Lato'),
     ),
     onPressed: () {
-      //Navegar a pagina de nueva cita
+      //Navegar a pagina para generar una nueva cita
       Navigator.of(context).pushNamed(
                 NuevaCitaPage.id);
     },

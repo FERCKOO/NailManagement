@@ -6,24 +6,22 @@ import 'package:flutter/material.dart';
 //import 'package:date_field/date_field.dart';
 
 class LogUpPage extends StatefulWidget {
-  static String id = "logUp_page";
+  static String id = "logUp_page"; //Variable que obtendra la ruta de la pantalla
 
   @override
   State<StatefulWidget> createState() => LogUpPageState();
 }
 
 class LogUpPageState extends State<LogUpPage> {
-
-
   @override
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
 
-    final firstName = TextEditingController();
-    final lastName = TextEditingController();
+    final firstName = TextEditingController(); // Variable para obtener el nombre
+    final lastName = TextEditingController(); // Variable para obtener el apellido
     final email = TextEditingController(); // Variable para el email
     final pass = TextEditingController(); // Variable para la contraseña
-    final confPass = TextEditingController();
+    final confPass = TextEditingController(); // Variabe para obtener la confirmacion de contraseña
 
     return SafeArea(
         child: Scaffold(
@@ -36,11 +34,11 @@ class LogUpPageState extends State<LogUpPage> {
             Icons.arrow_back_ios,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // Regreso a la pantalla Log In
           },
         ),
         /*
-         * Teto de regristro 
+         * Teto del encabezado 
         */
         title: const Text(
           'Registro',
@@ -70,7 +68,8 @@ class LogUpPageState extends State<LogUpPage> {
           SizedBox(height: sizeScreen.height * .02),
           _textFieldConfirmPassword(sizeScreen, confPass),
           SizedBox(height: sizeScreen.height * .03),
-          _buttonSingUp(context, sizeScreen, firstName, lastName, email, pass, confPass)
+          _buttonSingUp(
+              context, sizeScreen, firstName, lastName, email, pass, confPass)
         ],
       ),
     ));
@@ -78,7 +77,7 @@ class LogUpPageState extends State<LogUpPage> {
 }
 
 /*
- * Seccion de metodos y funciones
+ * Seccion de metodos, funciones y widgets propios
 */
 Widget _textFieldName(Size size, fName) {
   return _textFieldGeneral(
@@ -134,13 +133,13 @@ Widget _textFieldConfirmPassword(Size size, confPass) {
 
 Widget _buttonSingUp(
     BuildContext context, Size size, fName, lName, email, pass, confPass) {
+      // Variables locales que serviran como auxiliares
   String _fNameVar = '';
   String _lNameVar = '';
   String _emailVar = '';
   String _passVar = '';
   String _confPassVar = '';
-  Color coloor = Colors.grey.shade700;
-
+  Color coloor = Colors.grey.shade700; // Color de boton y otros widgets
 
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
@@ -162,19 +161,20 @@ Widget _buttonSingUp(
           fontFamily: 'Lato'),
     ),
     onPressed: () {
-      /*Por mientras
-      correoo = 'gaaarcia.na@gmail.com';
-      */
-      Navigator.of(context).pushNamedAndRemoveUntil(
-                PrincipalPage.id,
-                (Route<dynamic> route) => false);
 
+      // Navegacion directa a la pantalla principal
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          PrincipalPage.id, (Route<dynamic> route) => false);
+
+      /**
+       * Recuperacion de lo digitado en elos text labels
+       * Se guardan en su variable local correspondiente
+       */
       _fNameVar = fName.text;
       _lNameVar = lName.text;
-      _emailVar = email.text; // Se recupera el texto digitado
-      _passVar = pass.text; // Se recupera la contraseña registrada
+      _emailVar = email.text; 
+      _passVar = pass.text; 
       _confPassVar = confPass.text;
-/*
       // Limpieza de los controladores
       @override
       void dispose() {
@@ -185,15 +185,20 @@ Widget _buttonSingUp(
         confPass.dispose();
       }
 
+/**
+ * Validaciones para el registro de un nuevo usuario
+ * Comentado por el momento para el registro instantaneo
+      // Si no estan vacias los text labels...
       if (_emailVar != '' &&
           _passVar != '' &&
           _fNameVar != '' &&
           _lNameVar != '' &&
           _confPassVar != '') {
+            //Si se tiene una extencion de correo electronico...
         if (_emailVar.contains('@hotmail.com') ||
             _emailVar.contains('@outlook.com') ||
             _emailVar.contains('@gmail.com')) {
-          /*
+          
           // Si el email digitado existe...
           if (users.containsKey(_emailVar)) {
             AwesomeDialog(
@@ -217,7 +222,7 @@ Widget _buttonSingUp(
               btnOkOnPress: () {},
             ).show();
           }
-          */
+          
           //Si las contraseñas no son iguales...
           if (_passVar != _confPassVar) {
             AwesomeDialog(
@@ -240,22 +245,23 @@ Widget _buttonSingUp(
               btnOkText: 'Ok',
               btnOkOnPress: () {},
             ).show();
-          } /*else {
-            // Si todo esta bien Ingresa como usuario comun
+          } else {
+            /**
+             * Si todo esta bien Ingresa como usuario y sucede lo siguiente:
+             * 1.- Se agrega el correo electronico y contraseña la BD local
+             * 2.- Se agrega el nombre del usuario a la BD local
+             * 3.- Se guarda el correo digitado en una variable local
+             * 4.- Se navega a la pagina rincipal
+            */
             users.addAll({_emailVar: _passVar});
             usersName.addAll({_emailVar: '$_fNameVar $_lNameVar'});
 
-            print(users);
-            print(usersName);
-            print(referees);
-            print(refereesName);
-
-            correoo = _emailVar; // Se guarda el correo digitado
+            correoo = _emailVar;
 
             Navigator.of(context).pushNamedAndRemoveUntil(
-                LayoutBottomNavigatorBarUser.id,
+                PrincipalPage.id,
                 (Route<dynamic> route) => false);
-          }*/
+          }
         } else {
           AwesomeDialog(
             dialogType: DialogType.noHeader,
@@ -316,7 +322,10 @@ class _textFieldGeneral extends StatefulWidget {
   final bool obscureText;
   final TextEditingController myControler;
   final Size sizeScreen;
-
+  
+/**
+   * Constructor para los TextLabels
+   */
   const _textFieldGeneral({
     required this.labelText,
     this.hintText,
@@ -332,7 +341,6 @@ class _textFieldGeneral extends StatefulWidget {
 }
 
 class _textFieldGeneralState extends State<_textFieldGeneral> {
- 
   Color coloor = Colors.grey.shade600;
 
   @override
@@ -346,9 +354,7 @@ class _textFieldGeneralState extends State<_textFieldGeneral> {
         horizontal: widget.sizeScreen.width * .15,
       ),
       child: TextField(
-        style: TextStyle(
-          color: coloor
-        ),
+        style: TextStyle(color: coloor),
         controller: widget.myControler,
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
@@ -360,7 +366,6 @@ class _textFieldGeneralState extends State<_textFieldGeneral> {
           suffixIcon: Icon(widget.icon, color: coloor),
           labelText: widget.labelText,
           hintText: widget.hintText,
-          
         ),
         onChanged: (value) {},
       ),

@@ -3,18 +3,17 @@
 import 'package:angy/Api/bd_servicios.dart';
 import 'package:angy/Screens/principal.dart';
 import 'package:flutter/material.dart';
-
 import 'borrarServicio.dart';
 import 'nuevoServicio.dart';
 
 class ServiciosPage extends StatefulWidget {
-  static String id = 'Servicios_Page';
-  
+  static String id = 'Servicios_Page'; //Variable que obtendra la ruta de la pantalla
+
   @override
   State<StatefulWidget> createState() => ServicioPageState();
 }
 
-class ServicioPageState extends State <ServiciosPage>{
+class ServicioPageState extends State<ServiciosPage> {
   @override
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
@@ -30,11 +29,12 @@ class ServicioPageState extends State <ServiciosPage>{
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, PrincipalPage.id, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, PrincipalPage.id, (route) => false);
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Servicios',
@@ -101,6 +101,9 @@ class ServicioPageState extends State <ServiciosPage>{
                 )
               ],
             ),
+            /**
+             * List view de los servicios disponibles
+             */
             Expanded(
               child: ListView.builder(
                 itemCount: servicios.length,
@@ -114,11 +117,11 @@ class ServicioPageState extends State <ServiciosPage>{
                       elevation: 0,
                       child: ListTile(
                         title: Text(
-                          '${servicios.keys.elementAt(index)}',
+                          '${servicios.keys.elementAt(index)}', // Se imprime el nombre del servicio
                           style: TextStyle(color: Colors.white),
                         ),
                         trailing: Text(
-                          '${servicios.values.elementAt(index)} \$',
+                          '${servicios.values.elementAt(index)} \$', // Se imprime el costo del servicio
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -127,6 +130,11 @@ class ServicioPageState extends State <ServiciosPage>{
                 },
               ),
             ),
+            /**
+             * Seccion de botones
+             * Borrar servicio
+             * Agregar servicio
+             */
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -150,6 +158,10 @@ class ServicioPageState extends State <ServiciosPage>{
                         fontFamily: 'Lato'),
                   ),
                   onPressed: () {
+                    /**
+                     * Si se presiona lo redireccionará a la pantalla
+                     * para borrar un servicio
+                     */
                     Navigator.pushNamed(context, BorrarServicioPage.id);
                   },
                 ),
@@ -173,12 +185,18 @@ class ServicioPageState extends State <ServiciosPage>{
                         fontFamily: 'Lato'),
                   ),
                   onPressed: () {
+                    /**
+                     * Si se presiona lo redireccionará a la pantalla
+                     * para agregar un nuevo servicio
+                     */
                     Navigator.pushNamed(context, NuevoServicioPage.id);
                   },
                 ),
               ],
             ),
-            SizedBox(height: sizeScreen.height*.1,)
+            SizedBox(
+              height: sizeScreen.height * .1,
+            )
           ],
         ),
       ),

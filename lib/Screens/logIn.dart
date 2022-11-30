@@ -6,7 +6,7 @@ import 'logup.dart';
 import 'principal.dart';
 
 class LogInPage extends StatefulWidget {
-  static String id = 'LogIn_page';
+  static String id = 'LogIn_page'; //Variable que obtendra la ruta de la pantalla
 
   void setState(Null Function() param0) {}
 
@@ -15,14 +15,18 @@ class LogInPage extends StatefulWidget {
 }
 
 class LogInPageState extends State<LogInPage> {
-  final email = TextEditingController(); // Variable para el email
-  final pass = TextEditingController(); // Variable para la contraseña
+  final email = TextEditingController(); // Variable para obtener el email
+  final pass = TextEditingController(); // Variable para obtener la contraseña
 
-  String? emailAux;
-  String? passAux;
+  String? emailAux; // Variable auxiliar para guardar el email
+  String? passAux; // Variable auxiliar para guardar el email
 
   @override
   Widget build(BuildContext context) {
+    /**
+     *  Variable que contendra el tamaño de la pantalla del dispositivo
+     * Ayudará para que la app sea responsiva
+     */
     final sizeScreen = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -31,7 +35,7 @@ class LogInPageState extends State<LogInPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
         title: const Text(
           'Bienvenido',
@@ -55,36 +59,6 @@ class LogInPageState extends State<LogInPage> {
             ),
 
             /*
-             * Imagen del la app.
-            
-            Image(
-                alignment: Alignment.topCenter,
-                image: const AssetImage(
-                  'assets/images/LogoPng.png',
-                ),
-                width: sizeScreen.width * .4),
-            SizedBox(height: sizeScreen.height * .03),
-            */
-
-            /**
-             * Texto de bienvenida
-            Container(
-              margin: EdgeInsetsDirectional.only(
-                  top: sizeScreen.height * .03, bottom: sizeScreen.width * .03),
-              child: const Text(
-                'Bienvenid@',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF333333),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Lato',
-                ),
-              ),
-            ),
-            */
-
-            /*
                * Seccion de formulario
               */
 
@@ -98,6 +72,7 @@ class LogInPageState extends State<LogInPage> {
 
             /*
               * Seccion de actualizacion de contraseña
+              * Implementacion a futuro
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -128,6 +103,7 @@ class LogInPageState extends State<LogInPage> {
             ),
             SizedBox(height: sizeScreen.height * .01),
             */
+
             /*
               * Seccion para registrarse
             */
@@ -142,6 +118,10 @@ class LogInPageState extends State<LogInPage> {
                       color: Colors.white,
                     ),
                   ),
+                  /**
+                   * Widget para detectar gestos en zonas de la pantalla
+                   * Detectará la pulsacion del texto
+                   */
                   GestureDetector(
                     onTap: (() {
                       Navigator.pushNamed(context, LogUpPage.id);
@@ -162,39 +142,6 @@ class LogInPageState extends State<LogInPage> {
         ),
       ),
     ));
-  }
-}
-
-class _FutureBuilderGeneral extends StatefulWidget {
-  final Future<dynamic> future;
-  late String? data;
-
-  _FutureBuilderGeneral({required this.future, required this.data});
-
-  @override
-  State<_FutureBuilderGeneral> createState() => _FutureBuilderGeneralState();
-}
-
-class _FutureBuilderGeneralState extends State<_FutureBuilderGeneral> {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: widget.future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          widget.data = snapshot.data as String?;
-          print('Esto hay en widget.data: ${widget.data}');
-
-          return Text('Todo bien con la contraseña ${snapshot.data}');
-        } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Text('Error');
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
   }
 }
 
@@ -222,8 +169,9 @@ Widget _textFieldPassword(pass) {
 Widget _buttonSingIn(BuildContext context, email, pass, emailAux, passAux) {
   final sizeScreen = MediaQuery.of(context).size;
 
-  String _emailVar = '';
-  String _passVar = '';
+// Variables locales para guardar lo que se obtiene de los controladores
+  String _emailVar = ''; 
+  String _passVar = ''; 
 
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
@@ -245,8 +193,8 @@ Widget _buttonSingIn(BuildContext context, email, pass, emailAux, passAux) {
           fontFamily: 'Lato'),
     ),
     onPressed: () {
-      _emailVar = email.text; // Se recupera el texto digitado
-      _passVar = pass.text; // Se recupera la contraseña registrada
+      _emailVar = email.text; // Se recupera el texto digitado en el textLabel
+      _passVar = pass.text; // Se recupera la contraseña registrada en el textLabel
 
       // Limpieza de los controladores
       @override
@@ -254,10 +202,16 @@ Widget _buttonSingIn(BuildContext context, email, pass, emailAux, passAux) {
         email.dispose();
         pass.dispose();
       }
+
+      // Navegacion hacia la pantalla principal de la app
       Navigator.of(context).pushNamedAndRemoveUntil(
-                PrincipalPage.id,
-                (Route<dynamic> route) => false);
-/*
+          PrincipalPage.id, (Route<dynamic> route) => false);
+      
+      
+      /*
+       * Validaciones para el inicio de sesion
+       * Comentadas por el momento para entrar directamente a la app
+       
       //Si no estan vacios los TextField
       if (_emailVar != '' && _passVar != '') {
         /*
@@ -271,21 +225,14 @@ Widget _buttonSingIn(BuildContext context, email, pass, emailAux, passAux) {
             // Si existe el correo en el arreglo...
             if (users.containsKey(_emailVar) || referees.containsKey(_emailVar))
                { // Si contraseña es la misma en el arreglo...
-                 if (users[_emailVar] == _passVar || referees[_emailVar] == _passVar)
-                    { // Si el correo es de arbitro...
-                    if (referees.containsKey(_emailVar))
-                        { //Ingresa como arbitro print('Arbitro')
-                        correoo = _emailVar;
-
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            LayoutBottomNavigatorBarReferee.id,
-                            (Route<dynamic> route) => false);
-                        }else { //Ingresa como usuario comun print(users['Usuario])
+                 if (users[_emailVar] == _passVar)
+                    { 
+                     //Ingresa como usuario
                         correoo = _emailVar;
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            LayoutBottomNavigatorBarUser.id,
+                            PrincipalPage.id,
                             (Route<dynamic> route) => false);
-                        }
+                    
                     } else AwesomeDialog(
                         dialogType: DialogType.error,
                         context: context,
@@ -388,6 +335,9 @@ class _textFieldGeneral extends StatefulWidget {
   final bool obscureText;
   final TextEditingController myControler;
 
+  /**
+   * Constructor para los TextLabels
+   */
   const _textFieldGeneral(
       {required this.labelText,
       this.hintText,
@@ -402,7 +352,7 @@ class _textFieldGeneral extends StatefulWidget {
 }
 
 class _textFieldGeneralState extends State<_textFieldGeneral> {
-  Color coloor = Colors.grey.shade600;
+  Color coloor = Colors.grey.shade600; // Variable para ponerle color a lo necesario
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -415,9 +365,9 @@ class _textFieldGeneralState extends State<_textFieldGeneral> {
       ),
       child: TextField(
         style: TextStyle(color: coloor),
-        controller: widget.myControler,
+        controller: widget.myControler, // Controlador de cada text label
         keyboardType: widget.keyboardType,
-        obscureText: widget.obscureText,
+        obscureText: widget.obscureText, // Ocultar la contraseña
         decoration: InputDecoration(
           hintStyle: TextStyle(color: coloor),
           labelStyle: TextStyle(color: coloor),

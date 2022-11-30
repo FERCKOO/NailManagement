@@ -1,13 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, non_constant_identifier_names, prefer_const_constructors, unused_local_variable
 
-import 'package:angy/Screens/agenda.dart';
 import 'package:flutter/material.dart';
 
 import 'LogIn.dart';
 
 // ignore: use_key_in_widget_constructors
 class PrincipalPage extends StatelessWidget {
-  static String id = "Principal_page";
+  static String id = "Principal_page"; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class PrincipalPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black54,
         /*
-         * Teto de pantalla 
+         * Texto del encabezado
         */
         title: const Text(
           'Pantalla principal',
@@ -37,6 +36,9 @@ class PrincipalPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /**
+             * Seccion del formulario
+             */
             _button(context, sizeScreen, 'Agenda'),
             SizedBox(height: sizeScreen.height * .05),
             _button(context, sizeScreen, 'Ventas'),
@@ -81,8 +83,6 @@ class PrincipalPage extends StatelessWidget {
 
 // ignore: unused_element
 Widget _button(context, Size size, textLabel) {
-  //Listado de las pantallas
-  final List<Widget> _viewsOptions = <Widget>[];
 
   Color coloor = Colors.grey.shade700;
 
@@ -111,6 +111,12 @@ Widget _button(context, Size size, textLabel) {
             fontFamily: 'Lato'),
       ),
       onPressed: () {
+
+        /**
+         * Cuando se presiona una seccion sucede lo siguiente:
+         * 1.- Se guarda la ruta de la opcion digitada en una variable.
+         * 2.- Se redirecciona a la pantalla deseada.
+         */
         var textLabelPage = '${textLabel}_Page';
 
         Navigator.of(context).pushNamed(textLabelPage);

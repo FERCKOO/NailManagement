@@ -9,13 +9,13 @@ import '../Api/bd_servicios.dart';
 import 'agenda.dart';
 
 class NuevaCitaPage extends StatelessWidget {
-  static String id = 'NuevaCita_Page';
+  static String id = 'NuevaCita_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
 
-    final firstName = TextEditingController();
+    final firstName = TextEditingController(); // Variable para obtener el nombre
 
     return SafeArea(
       child: Scaffold(
@@ -32,7 +32,7 @@ class NuevaCitaPage extends StatelessWidget {
             },
           ),
           /*
-         * Texto de inicio sesion
+         * Texto del encabezado
         */
           title: const Text(
             'Nueva cita',
@@ -49,6 +49,10 @@ class NuevaCitaPage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            /**
+             * Formulario para la cita nueva
+             */
             _textFieldName(sizeScreen, firstName),
             SizedBox(height: sizeScreen.height * .02),
             _DropDown(
@@ -67,7 +71,7 @@ class NuevaCitaPage extends StatelessWidget {
 }
 
 /*
- * Seccion de metodos y funciones
+ * Seccion de metodos, funciones y widgets propios
 */
 Widget _formFieldDate() {
   return _formDateGeneral();
@@ -84,7 +88,7 @@ Widget _textFieldName(Size size, fName) {
 }
 
 Widget _buttonSingUp(BuildContext context, Size size, fName) {
-  String _fNameVar = '';
+  String _fNameVar = ''; // Variable local auxiliar
   Color coloor = Colors.grey.shade700;
 
   return ElevatedButton(
@@ -107,27 +111,32 @@ Widget _buttonSingUp(BuildContext context, Size size, fName) {
           fontFamily: 'Lato'),
     ),
     onPressed: () {
+      _fNameVar = fName.text; // Se extrae el nombre del cliente digitado
 
-      _fNameVar = fName.text;
       // Limpieza de los controladores
       @override
       void dispose() {
         fName.dispose();
       }
+      // Se verifica que no esten vacios los text labels
+      if (_fNameVar != '' &&
+          TipoServicio != '' &&
+          fechaCita != '' &&
+          horaCita != '') {
+            /**
+             * Si no estan vacios sucede lo siguiente:
+             * 1.- Se guarda el tipo de servicio que se solicitó.
+             * 2.- Se guarda el nombre del cliente solicitante.
+             * 3.- Se guarda la fecha en que será la cita.
+             * 4.- Se navega a la pantalla de las citas.
+             */
+        servicio.addAll({servicio.keys.last + 1: TipoServicio});
+        cliente.addAll({cliente.keys.last + 1: _fNameVar});
+        fechaHoraCita
+            .addAll({fechaHoraCita.keys.last + 1: '$fechaCita $horaCita'});
 
-      if (_fNameVar != '' 
-      && TipoServicio != '' 
-      && fechaCita != '' 
-      && horaCita != ''){
-        servicio.addAll({servicio.keys.last+1: TipoServicio});
-        cliente.addAll({cliente.keys.last+1: _fNameVar});
-        fechaHoraCita.addAll({fechaHoraCita.keys.last+1: '$fechaCita $horaCita'});
-        print(servicio);
-        print(cliente);
-        print(fechaHoraCita);
-
-        Navigator.of(context).pushNamedAndRemoveUntil(AgendaPage.id, (route) => false);
-
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(AgendaPage.id, (route) => false);
       } else {
         AwesomeDialog(
           dialogType: DialogType.noHeader,
@@ -150,7 +159,6 @@ Widget _buttonSingUp(BuildContext context, Size size, fName) {
           btnOkOnPress: () {},
         ).show();
       }
-      
     },
   );
 }
@@ -166,6 +174,9 @@ class _DropDown extends StatefulWidget {
 }
 
 class _DropDownState extends State<_DropDown> {
+  /**
+   * Variable que obtendra el valor seleccionado en el Drop Down
+   */
   String? _value;
 
   @override
@@ -188,18 +199,24 @@ class _DropDownState extends State<_DropDown> {
                 widget.text,
                 style: TextStyle(color: Colors.grey.shade600),
               ),
-              value: _value,
+              value: _value, // Valor inicial del Drop Down
               style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
               items: widget.items.map((String posiciones) {
                 return DropdownMenuItem(
                   value: posiciones,
                   child: Text(posiciones),
                 );
-              }).toList(),
+              }).toList(), // Se listan los servicios que se le mandan al Drop Down
+              /**
+               * Al cambiar el valor en el Drop Down sucede lo siguiente:
+               * 1.- Se obtiene el servicio seleccionado.
+               * 2.- Se le pasa a la variable local para mostrarlo despues.
+               * 3.- Se manda el servicio seleccionado a la variable global de la BD para su posterior uso
+               */
               onChanged: (String? newValue) => setState(() {
                     _value = newValue!;
                     TipoServicio = _value!;
-                })),
+                  })),
         ),
       ),
     );
@@ -267,7 +284,6 @@ class _textFieldGeneralState extends State<_textFieldGeneral> {
 
 // clase fecha de cita
 class _formDateGeneral extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final Size sizeScreen = MediaQuery.of(context).size;
@@ -297,7 +313,7 @@ class _formDateGeneral extends StatelessWidget {
               validator: (DateTime? e) =>
                   (e?.day ?? 0) == 1 ? 'No seleccione el primer dia' : null,
               onDateSelected: (DateTime value) {
-                // Separar fecha de hora
+                // Se separa la fecha y hora en las variables globales
                 fechaCita = '${value.day}/${value.month}/${value.year}';
                 horaCita = '${value.hour}:${value.minute}';
               },

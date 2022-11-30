@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, prefer_const_constructors, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'principal.dart';
 
 class GananciasPage extends StatelessWidget {
   static String id = 'Ganancias_Page';
@@ -20,7 +21,8 @@ class GananciasPage extends StatelessWidget {
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, PrincipalPage.id, (route) => false);
             },
           ),
           /*
@@ -41,7 +43,6 @@ class GananciasPage extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             /**
              * Linea horizontal.
             */
@@ -70,8 +71,7 @@ class GananciasPage extends StatelessWidget {
                         title: Text('aaaa'),
                       ),
                     ),
-                    onTap: () {
-                    },
+                    onTap: () {},
                   );
                 },
               ),

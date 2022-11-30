@@ -2,21 +2,19 @@
 
 import 'package:angy/Api/bd_agenda.dart';
 import 'package:angy/Api/bd_servicios.dart';
-import 'package:angy/Api/bd_ventas.dart';
 import 'package:angy/Screens/servicios.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:date_field/date_field.dart';
 
 class NuevoServicioPage extends StatelessWidget {
-  static String id = 'NuevoServicio_Page';
+  static String id = 'NuevoServicio_Page'; //Variable que obtendra la ruta de la pantalla
 
   @override
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
 
-    final name = TextEditingController();
-    final costo = TextEditingController();
+    final name = TextEditingController();  // Variable para obtener el nombre del nuevo servicio
+    final costo = TextEditingController(); // Variable para obtener el costo del servicio
 
     return SafeArea(
       child: Scaffold(
@@ -29,7 +27,9 @@ class NuevoServicioPage extends StatelessWidget {
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, ServiciosPage.id, (route) => false);
+              // Regreso a la pantalla principal
+              Navigator.pushNamedAndRemoveUntil(
+                  context, ServiciosPage.id, (route) => false);
             },
           ),
           /*
@@ -50,11 +50,14 @@ class NuevoServicioPage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /**
+             * Seccion del formulario
+             */
             _textFieldName(sizeScreen, name),
             SizedBox(height: sizeScreen.height * .02),
             _textFieldCost(sizeScreen, costo),
             SizedBox(height: sizeScreen.height * .03),
-            _buttonSingUp(context, sizeScreen, name, costo)
+            _buttonNuevoServicio(context, sizeScreen, name, costo)
           ],
         ),
       ),
@@ -86,9 +89,9 @@ Widget _textFieldCost(Size size, costo) {
   );
 }
 
-Widget _buttonSingUp(BuildContext context, Size size, name, costo) {
-  String _NameVar = '';
-  String _costoVar = '';
+Widget _buttonNuevoServicio(BuildContext context, Size size, name, costo) {
+  String _NameVar = ''; // Variable local auxiliar para el nombre del nuevo servico
+  String _costoVar = ''; // Variable local auxiliar para el costo del servicio
   Color coloor = Colors.grey.shade700;
 
   return ElevatedButton(
@@ -121,7 +124,9 @@ Widget _buttonSingUp(BuildContext context, Size size, name, costo) {
         costo.dispose();
       }
 
+      // Verificaicon para que no esten vacios los labels
       if (_NameVar != '' && _costoVar != '') {
+        // Si el servicio digitado ya eiste...
         if (servicio.containsValue(TipoServicio)) {
           AwesomeDialog(
             dialogType: DialogType.noHeader,
@@ -144,6 +149,11 @@ Widget _buttonSingUp(BuildContext context, Size size, name, costo) {
             btnOkOnPress: () {},
           ).show();
         } else {
+          /**
+           * Si el servicio a agregar no exist hace lo siguiente:
+           * 1.- Agrega el servicio y costo digitados a la BD local
+           * 2.- Lo redirecciona a la pantalla de los servicios
+           */
           servicios.addAll({_NameVar: int.parse(_costoVar)});
           Navigator.pushNamed(context, ServiciosPage.id);
         }
@@ -227,49 +237,6 @@ class _textFieldGeneralState extends State<_textFieldGeneral> {
           hintText: widget.hintText,
         ),
         onChanged: (value) {},
-      ),
-    );
-  }
-}
-
-// clase fecha de cita
-class _formDateGeneral extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final Size sizeScreen = MediaQuery.of(context).size;
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xff171717),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: sizeScreen.width * .15,
-      ),
-      child: Form(
-        child: Column(
-          children: <Widget>[
-            DateTimeFormField(
-              firstDate: DateTime.now(),
-              dateTextStyle: TextStyle(color: Colors.grey.shade600),
-              decoration: InputDecoration(
-                  hintStyle: TextStyle(color: Colors.black45),
-                  errorStyle: TextStyle(color: Colors.redAccent),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  suffixIcon:
-                      Icon(Icons.event_note, color: Colors.grey.shade600),
-                  labelText: 'Fecha y hora de cita',
-                  labelStyle: TextStyle(color: Colors.grey.shade600)),
-              validator: (DateTime? e) =>
-                  (e?.day ?? 0) == 1 ? 'No seleccione el primer dia' : null,
-              onDateSelected: (DateTime value) {
-                // Separar fecha de hora
-                fechaCita = '${value.day}/${value.month}/${value.year}';
-                horaCita = '${value.hour}:${value.minute}';
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
